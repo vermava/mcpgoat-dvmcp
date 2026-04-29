@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 200" role="img" aria-labelledby="title desc">
-  <title id="title">MCP Goat  OWASP MCP Security Lab</title>
+  <title id="title">MCP Goat - OWASP MCP Security Lab</title>
   <desc id="desc">Blue to purple gradient banner</desc>
   <defs>
     <linearGradient id="sky" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -23,6 +23,6 @@
   <circle cx="780" cy="60" r="40" fill="#c084fc" opacity="0.4"/>
   <circle cx="820" cy="150" r="28" fill="#818cf8" opacity="0.45"/>
   <text x="450" y="88" text-anchor="middle" fill="#f8fafc" font-family="ui-sans-serif, system-ui, sans-serif" font-size="42" font-weight="700" filter="url(#soft)">MCP Goat</text>
-  <text x="450" y="128" text-anchor="middle" fill="#e0e7ff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="500">OWASP MCP / LLM Security Lab · local-only</text>
-  <text x="450" y="168" text-anchor="middle" fill="#c4b5fd" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">Educational · intentionally vulnerable · dummy data</text>
+  <text x="450" y="128" text-anchor="middle" fill="#e0e7ff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="500">OWASP MCP / LLM Security Lab - local-only</text>
+  <text x="450" y="168" text-anchor="middle" fill="#c4b5fd" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">Educational - intentionally vulnerable - dummy data</text>
 </svg>
