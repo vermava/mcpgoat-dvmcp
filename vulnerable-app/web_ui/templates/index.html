@@ -1,13 +1,24 @@
 {% extends "base.html" %}
 {% block title %}Lab index — MCP Security Lab{% endblock %}
 {% block content %}
+{% if show_readme_banner %}
+<figure class="home-readme-banner">
+  <img
+    src="/assets/readme-banner.svg"
+    alt="MCP Security Lab"
+    width="900"
+    height="200"
+    decoding="async"
+  />
+</figure>
+{% endif %}
 <section class="home-edu" aria-labelledby="edu-mcp-heading">
   <h2 id="edu-mcp-heading">What is MCP?</h2>
   <p>
     <strong>Model Context Protocol (MCP)</strong> is an open standard for connecting AI assistants to
     <strong>tools, data, and services</strong> your organization already runs. Instead of hard-coding every
-    integration into the model, the host (IDE, chat client, or agent runtime) discovers what a server exposes—
-    tool names, descriptions, parameters—and the model (or a scripted “agent” in this lab) picks tools and passes
+    integration into the model, the host (IDE, chat client, or agent runtime) discovers what a server exposes
+    tool names, descriptions, parameters and the model (or a scripted “agent” in this lab) picks tools and passes
     arguments over JSON-RPC–style messages. That boundary is powerful: it lets assistants act on real systems,
     but it also concentrates risk where <strong>natural language meets executable capability</strong>.
   </p>
@@ -26,9 +37,9 @@
     <div class="panel">
       <h3>Layers you are exercising</h3>
       <p>
-        The <strong>web UI</strong> is the host-facing surface (session, persona, lab pages). The
+        The <strong>web UI</strong> is the host facing surface (session, persona, lab pages). The
         <strong>simulated agent</strong> mimics model-driven tool selection and argument filling from scenario scripts.
-        <strong>Tool handlers</strong> in Python implement MCP-style operations (documents, reports, admin actions)—
+        <strong>Tool handlers</strong> in Python implement MCP style operations (documents, reports, admin actions)
         the same code paths power the optional FastMCP stdio server for real clients.
       </p>
       <pre class="arch-flow" role="img" aria-label="Data flow: user and UI to agent, then MCP tools, then responses back through agent and UI">User / browser (UI + session)

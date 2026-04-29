@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/readme-banner.svg" alt="MCP Goat — OWASP MCP Security Lab banner" width="100%"/>
+<img src="assets/readme-banner.svg" alt="MCP Security Lab / MCP Got / Dam Vulnerable MCP App — OWASP MCP / LLM Security Lab banner" width="100%"/>
 
 <br/>
 
@@ -19,9 +19,9 @@
 
 ---
 
-## MCP security Lab – MCP Goat
+## MCP Security Lab / MCP Got / Dam Vulnerable MCP App
 
-### OWASP MCP / LLM Security Lab (local-only)
+### OWASP MCP / LLM Security Lab
 
 Educational, **intentionally vulnerable** Model Context Protocol (MCP) lab for students and AppSec / AI security practitioners. Everything runs locally with **dummy data** and a **simulated agent** (no cloud LLM required).
 
@@ -50,7 +50,7 @@ Educational, **intentionally vulnerable** Model Context Protocol (MCP) lab for s
 
 ## Safety
 
-- Localhost use only; do not expose the container to untrusted networks.
+- Do not expose the container to untrusted networks.
 - No real credentials, production APIs, or customer data.
 - “Execution” and “HTML” risks are **simulated / sandboxed patterns** for teaching.
 

@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
@@ -47,6 +47,23 @@ if settings.cors_allow_all:
 
 
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "web_ui" / "static")), name="static")
+
+_bundled_assets = BASE_DIR / "assets"
+_repo_assets = BASE_DIR.parent / "assets"
+if (_bundled_assets / "readme-banner.svg").is_file():
+    app.mount("/assets", StaticFiles(directory=str(_bundled_assets)), name="assets")
+elif (_repo_assets / "readme-banner.svg").is_file():
+    app.mount("/assets", StaticFiles(directory=str(_repo_assets)), name="assets")
+
+_FAVICON_SVG = BASE_DIR / "web_ui" / "static" / "favicon.svg"
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    """Browsers request /favicon.ico by default; serve the SVG icon with an SVG media type."""
+    if not _FAVICON_SVG.is_file():
+        raise HTTPException(status_code=404)
+    return FileResponse(_FAVICON_SVG, media_type="image/svg+xml")
 
 
 LABS_META: list[dict[str, Any]] = [
@@ -299,6 +316,12 @@ async def verbose_errors(_request: Request, exc: Exception):
     return JSONResponse(status_code=500, content={"error": "internal_error"})
 
 
+def _readme_banner_available() -> bool:
+    return (_bundled_assets / "readme-banner.svg").is_file() or (
+        _repo_assets / "readme-banner.svg"
+    ).is_file()
+
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse(
@@ -310,6 +333,7 @@ async def home(request: Request):
             "user": _session_user(request)[1],
             "username": _session_user(request)[1],
             "debug_mode": settings.debug_mode,
+            "show_readme_banner": _readme_banner_available(),
         },
     )
 

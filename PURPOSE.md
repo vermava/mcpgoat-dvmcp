@@ -1,6 +1,6 @@
 # Why we built MCP Goat
 
-This document explains **why** this lab exists, **what gap** it fills, and **how** it helps people internalize MCP and LLM security concepts—not just read about them.
+This document explains **why** this lab exists, **what gap** it fills, and **how** it helps people internalize MCP and LLM security concepts not just read about them.
 
 ---
 

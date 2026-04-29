@@ -1,4 +1,4 @@
-# OWASP mapping — MCP Security Lab
+# OWASP mapping — MCP Security Lab / MCP Got / Dam Vulnerable MCP App
 
 This project maps each hands-on lab to the **OWASP MCP Top 10 (2025)** and the **OWASP Top 10 for LLM Applications (2025)**. All behavior is simulated with dummy data.
 

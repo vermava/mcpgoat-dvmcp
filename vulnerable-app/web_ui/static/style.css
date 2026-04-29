@@ -30,8 +30,10 @@ a {
 
 .site-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem 1rem;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid #2a3440;
 }
@@ -46,6 +48,21 @@ a {
   max-width: 960px;
   margin: 0 auto;
   padding: 1.25rem;
+}
+
+.home-readme-banner {
+  margin: 0 0 1.75rem;
+  padding: 0;
+}
+
+.home-readme-banner img {
+  display: block;
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 }
 
 .site-footer {
