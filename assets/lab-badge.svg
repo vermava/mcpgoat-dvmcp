@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" role="img" aria-label="Security lab badge">
+  <defs>
+    <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <circle cx="70" cy="70" r="64" fill="#1e1b4b" stroke="url(#ring)" stroke-width="6"/>
+  <path d="M70 38c-12 0-22 10-22 22v10h-8v36h60V70h-8V60c0-12-10-22-22-22z" fill="url(#ring)" opacity="0.9"/>
+  <circle cx="70" cy="60" r="10" fill="#c4b5fd"/>
+  <text x="70" y="118" text-anchor="middle" fill="#e9d5ff" font-family="system-ui,sans-serif" font-size="11" font-weight="700">LAB</text>
+</svg>

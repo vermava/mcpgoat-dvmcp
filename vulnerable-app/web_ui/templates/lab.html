@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}{{ lab.title }} — Lab {{ lab.id }}{% endblock %}
+{% block content %}
+<article class="lab">
+  <p class="crumb"><a href="/">All labs</a> / Lab {{ lab.id }}</p>
+  <h1>Lab {{ lab.id }}: {{ lab.title }}</h1>
+
+  <section class="panel lab-intro-panel" aria-labelledby="lab-about-heading">
+    <h2 id="lab-about-heading" class="lab-intro-title">About this vulnerability</h2>
+    <p class="lab-intro-body">{{ lab.intro }}</p>
+    <p class="lead lab-intro-follow">Below, run the canned scenario to see simulated reasoning, tool selection, arguments, and outputs.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Session</h2>
+    <div class="controls">
+      <label>Persona</label>
+      <select id="persona">
+        <option value="alice" {% if user == 'alice' %}selected{% endif %}>Alice</option>
+        <option value="bob" {% if user == 'bob' %}selected{% endif %}>Bob</option>
+      </select>
+      <label class="chk"><input type="checkbox" id="instructor" {% if instructor %}checked{% endif %} /> Instructor hints</label>
+      <button type="button" id="save-session">Apply session</button>
+    </div>
+    {% if instructor and hints %}
+    <div class="hints">
+      <h3>Hints</h3>
+      <ul>{% for h in hints %}<li>{{ h }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Challenge level</h2>
+    <p class="note">Each level runs a different scenario shape (or default payload). Switch level to load the suggested starter text when available.</p>
+    <div class="controls">
+      <label for="challenge-level">Difficulty</label>
+      <select id="challenge-level">
+        <option value="1" selected>Basic (1)</option>
+        <option value="2">Medium (2)</option>
+        <option value="3">Advanced (3)</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Scenario input</h2>
+    <label for="user-message">Message / payload (lab-specific)</label>
+    <textarea id="user-message" rows="4">{{ default_message }}</textarea>
+    {% if lab_id == 10 %}
+    <p class="note">Shadow tools default: <strong>{{ shadow_enabled }}</strong>. Debug settings JSON:
+      <a href="/api/debug/settings" target="_blank" rel="noreferrer">/api/debug/settings</a>
+    </p>
+    {% endif %}
+    <button type="button" id="run-btn" class="primary">Run vulnerable scenario</button>
+  </section>
+
+  <section class="panel">
+    <h2>Execution trace</h2>
+    <div id="trace" class="trace empty">Run a scenario to populate tool calls.</div>
+    {% if lab_id == 8 %}
+    <div class="panel warn">
+      <h3>Vulnerable UI sink (Lab 8)</h3>
+      <p>Below uses <code>innerHTML</code> with model/tool-derived content — unsafe pattern for teaching only.</p>
+      <div id="unsafe-sink" class="unsafe-sink"></div>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Student notes</h2>
+    <p>Markdown deep-dive: <code>docs/labs/lab-{{ '%02d' % lab_id }}.md</code> (in this repo).</p>
+  </section>
+
+  <section class="panel lab-security-takeaways" aria-labelledby="takeaways-heading">
+    <h2 id="takeaways-heading" class="lab-takeaways-main-title">Risks, remediation, and proactive controls</h2>
+    <div class="lab-takeaway-block">
+      <h3 class="lab-takeaway-title">Risks</h3>
+      <ul class="lab-takeaway-list">{% for line in lab.risks %}<li>{{ line }}</li>{% endfor %}</ul>
+    </div>
+    <div class="lab-takeaway-block">
+      <h3 class="lab-takeaway-title">Remediation</h3>
+      <ul class="lab-takeaway-list">{% for line in lab.remediation %}<li>{{ line }}</li>{% endfor %}</ul>
+    </div>
+    <div class="lab-takeaway-block">
+      <h3 class="lab-takeaway-title">Proactive controls</h3>
+      <ul class="lab-takeaway-list">{% for line in lab.proactive_controls %}<li>{{ line }}</li>{% endfor %}</ul>
+    </div>
+  </section>
+</article>
+<script>
+  (function () {
+    const labId = {{ lab_id }};
+    const runBtn = document.getElementById('run-btn');
+    const trace = document.getElementById('trace');
+    const levelSelect = document.getElementById('challenge-level');
+    const msgEl = document.getElementById('user-message');
+    const levelDefaults = {{ level_defaults | tojson }};
+
+    function applyDefaultForLevel() {
+      const lv = String(levelSelect.value);
+      if (Object.prototype.hasOwnProperty.call(levelDefaults, lv) && levelDefaults[lv] !== '') {
+        msgEl.value = levelDefaults[lv];
+      }
+    }
+    levelSelect.addEventListener('change', applyDefaultForLevel);
+
+    document.getElementById('save-session').addEventListener('click', async () => {
+      const u = document.getElementById('persona').value;
+      const ins = document.getElementById('instructor').checked;
+      await fetch('/api/session/user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user: u }),
+      });
+      await fetch('/api/session/instructor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ on: ins }),
+      });
+      location.reload();
+    });
+
+    function esc(s) {
+      return s.replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+      }[c]));
+    }
+
+    runBtn.addEventListener('click', async () => {
+      trace.textContent = 'Running…';
+      trace.classList.remove('empty');
+      const msg = document.getElementById('user-message').value;
+      const challengeLevel = parseInt(levelSelect.value, 10) || 1;
+      const body = { lab_id: labId, user_message: msg, challenge_level: challengeLevel };
+      if (labId === 7) body.template = msg;
+      if (labId === 8) body.snippet = msg;
+      if (labId === 10) body.target = msg || 'shadow-endpoint';
+      const res = await fetch('/api/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        trace.innerHTML = '<pre class="error">' + esc(JSON.stringify(data, null, 2)) + '</pre>';
+        return;
+      }
+      const parts = [];
+      parts.push('<div class="meta">User: ' + esc(String(data.username)) + ' (id ' + esc(String(data.user_id)) + ')</div>');
+      if (data.meta) {
+        parts.push('<pre class="meta-block">' + esc(JSON.stringify(data.meta, null, 2)) + '</pre>');
+      }
+      (data.steps || []).forEach((step, i) => {
+        parts.push('<div class="step">');
+        parts.push('<h4>Step ' + (i + 1) + ': <code>' + esc(step.tool_name) + '</code></h4>');
+        parts.push('<p class="reasoning"><strong>Reasoning (simulated):</strong> ' + esc(step.reasoning) + '</p>');
+        parts.push('<pre class="args">' + esc(JSON.stringify(step.tool_arguments, null, 2)) + '</pre>');
+        parts.push('<pre class="out">' + esc(step.tool_output_text || '') + '</pre>');
+        parts.push('</div>');
+      });
+      trace.innerHTML = parts.join('');
+      if (labId === 8 && data.unsafe_html_fragment) {
+        const sink = document.getElementById('unsafe-sink');
+        if (sink) sink.innerHTML = data.unsafe_html_fragment;
+      }
+    });
+  })();
+</script>
+{% endblock %}

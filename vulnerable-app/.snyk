@@ -1,0 +1,5 @@
+# Snyk policy — keep scans focused on first-party lab code.
+version: v1.25.0
+exclude:
+  code:
+    - .venv/**

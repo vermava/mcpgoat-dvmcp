@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}OWASP MCP / LLM Vulnerable Lab{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="banner" role="alert">
+    <strong>Intentionally vulnerable.</strong>
+    Local training use only. Dummy data. Do not expose to the internet or production.
+  </div>
+  <header class="site-header">
+    <a class="brand" href="/">MCP Security Lab</a>
+    <nav>
+      <a href="/">Labs</a>
+      <span class="sep">|</span>
+      <span class="meta">User: <strong id="nav-user">{{ user | default('alice') }}</strong></span>
+      {% if instructor %}<span class="pill instructor">Instructor</span>{% endif %}
+      {% if debug_mode %}<span class="pill warn">DEBUG</span>{% endif %}
+    </nav>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <p>OWASP MCP Top 10 + OWASP LLM Top 10 (2025) — educational mapping in <code>owasp-mapping.md</code> (repository root).</p>
+  </footer>
+</body>
+</html>

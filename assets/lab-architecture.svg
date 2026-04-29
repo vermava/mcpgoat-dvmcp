@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 220" role="img" aria-labelledby="t2">
+  <title id="t2">Host, agent, and MCP tools</title>
+  <defs>
+    <linearGradient id="box" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="box2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="box3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#4f46e5"/>
+    </linearGradient>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect width="480" height="220" rx="12" fill="#0f172a"/>
+  <rect x="24" y="70" width="100" height="80" rx="8" fill="url(#box)" stroke="#93c5fd" stroke-width="2"/>
+  <text x="74" y="108" text-anchor="middle" fill="white" font-family="system-ui,sans-serif" font-size="13" font-weight="600">Host</text>
+  <text x="74" y="128" text-anchor="middle" fill="#bfdbfe" font-family="system-ui,sans-serif" font-size="11">FastAPI</text>
+  <rect x="190" y="70" width="100" height="80" rx="8" fill="url(#box2)" stroke="#c4b5fd" stroke-width="2"/>
+  <text x="240" y="108" text-anchor="middle" fill="white" font-family="system-ui,sans-serif" font-size="13" font-weight="600">Agent</text>
+  <text x="240" y="128" text-anchor="middle" fill="#ede9fe" font-family="system-ui,sans-serif" font-size="11">Bob / Alice</text>
+  <rect x="356" y="70" width="100" height="80" rx="8" fill="url(#box3)" stroke="#a5b4fc" stroke-width="2"/>
+  <text x="406" y="108" text-anchor="middle" fill="white" font-family="system-ui,sans-serif" font-size="13" font-weight="600">MCP</text>
+  <text x="406" y="128" text-anchor="middle" fill="#e0e7ff" font-family="system-ui,sans-serif" font-size="11">Tools</text>
+  <path d="M128 110 H182" stroke="#94a3b8" stroke-width="3" fill="none" marker-end="url(#arr)"/>
+  <path d="M294 110 H352" stroke="#94a3b8" stroke-width="3" fill="none" marker-end="url(#arr)"/>
+  <text x="240" y="40" text-anchor="middle" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="14" font-weight="600">Lab layers you will trace</text>
+  <text x="240" y="200" text-anchor="middle" fill="#64748b" font-family="system-ui,sans-serif" font-size="11">Simulated · localhost · teaching only</text>
+</svg>

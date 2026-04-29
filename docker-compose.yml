@@ -1,0 +1,12 @@
+services:
+  lab:
+    build:
+      context: ./vulnerable-app
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PYTHONUNBUFFERED=1
+    read_only: false
+    security_opt:
+      - no-new-privileges:true

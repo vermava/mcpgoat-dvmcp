@@ -1,0 +1,7 @@
+vulnerable-app/.venv/
+vulnerable-app/data/*.sqlite3
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.DS_Store

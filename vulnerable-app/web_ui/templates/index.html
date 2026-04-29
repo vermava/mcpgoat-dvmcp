@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Lab index — MCP Security Lab{% endblock %}
+{% block content %}
+<section class="home-edu" aria-labelledby="edu-mcp-heading">
+  <h2 id="edu-mcp-heading">What is MCP?</h2>
+  <p>
+    <strong>Model Context Protocol (MCP)</strong> is an open standard for connecting AI assistants to
+    <strong>tools, data, and services</strong> your organization already runs. Instead of hard-coding every
+    integration into the model, the host (IDE, chat client, or agent runtime) discovers what a server exposes—
+    tool names, descriptions, parameters—and the model (or a scripted “agent” in this lab) picks tools and passes
+    arguments over JSON-RPC–style messages. That boundary is powerful: it lets assistants act on real systems,
+    but it also concentrates risk where <strong>natural language meets executable capability</strong>.
+  </p>
+  <p>
+    In production, MCP sits alongside prompts, retrieved context, and UI layers. Security failures often show up
+    as <strong>wrong tool choice</strong>, <strong>unsafe arguments</strong>, <strong>over-trusted tool output</strong>,
+    or <strong>servers and tools you did not intend to grant</strong>. This app reproduces those patterns with dummy
+    data so you can trace them end-to-end without a cloud LLM.
+  </p>
+
+  <h2>Architecture in this lab</h2>
+  <p class="lead sub">
+    Follow one request from surface to handler: who decides the tool, who checks permissions, and where output is rendered.
+  </p>
+  <div class="edu-panels">
+    <div class="panel">
+      <h3>Layers you are exercising</h3>
+      <p>
+        The <strong>web UI</strong> is the host-facing surface (session, persona, lab pages). The
+        <strong>simulated agent</strong> mimics model-driven tool selection and argument filling from scenario scripts.
+        <strong>Tool handlers</strong> in Python implement MCP-style operations (documents, reports, admin actions)—
+        the same code paths power the optional FastMCP stdio server for real clients.
+      </p>
+      <pre class="arch-flow" role="img" aria-label="Data flow: user and UI to agent, then MCP tools, then responses back through agent and UI">User / browser (UI + session)
+        → simulated agent (tool choice + args)
+        → MCP-style tool handlers (data / side effects)
+        → tool output + traces → UI rendering</pre>
+    </div>
+    <div class="panel">
+      <h3>Why the trust boundary matters</h3>
+      <p>
+        MCP inherits classic API risks (authz, injection, logging) and adds LLM-specific dynamics: descriptions and
+        retrieved text influence behavior. A poisoned tool description, an aggressive system prompt, or a document
+        that smuggles instructions can steer the stack without touching your source code in obvious ways.
+      </p>
+    </div>
+  </div>
+
+  <h2>Security themes (OWASP)</h2>
+  <p>
+    Labs map to <strong>OWASP MCP Top 10</strong> and <strong>OWASP Top 10 for LLM Applications (2025)</strong>. Below is how those categories show up around MCP-style integrations—not an exhaustive list, but the lens for each exercise.
+  </p>
+  <div class="edu-panels">
+    <div class="panel">
+      <h3>MCP-oriented risks</h3>
+      <ul>
+        <li><strong>Secrets &amp; tokens</strong> — API keys or PII echoed into tool results, logs, or traces (MCP01).</li>
+        <li><strong>Scope creep &amp; shadow surfaces</strong> — tools or servers with more power than users understood (MCP02, MCP09).</li>
+        <li><strong>Tool poisoning</strong> — misleading names/descriptions that trick the model into unsafe calls (MCP03).</li>
+        <li><strong>Execution &amp; command paths</strong> — arguments that reach shells or privileged actions (MCP05).</li>
+        <li><strong>Intent &amp; context injection</strong> — untrusted text steering tool choice or leaking data across tenants (MCP06, MCP10).</li>
+        <li><strong>Weak authz on tools</strong> — missing checks on who may invoke which tool with which args (MCP07).</li>
+        <li><strong>Blind spots</strong> — insufficient audit trails when agents act at scale (MCP08).</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>LLM Top 10 angles you will see</h3>
+      <ul>
+        <li><strong>Prompt injection</strong> (LLM01) — indirect instructions in user input or retrieved docs.</li>
+        <li><strong>Sensitive disclosure</strong> (LLM02) — oversharing via tools or UI.</li>
+        <li><strong>Poisoned data &amp; metadata</strong> (LLM04) — bad content or descriptions affecting decisions.</li>
+        <li><strong>Improper output handling</strong> (LLM05) — treating model or tool output as safe markup.</li>
+        <li><strong>Excessive agency</strong> (LLM06) — tools that can do too much in one call.</li>
+        <li><strong>Unbounded consumption</strong> (LLM10) — missing limits on calls, tokens, or cost (narrative in later labs).</li>
+      </ul>
+      <p class="panel-after-list">
+        Full lab-to-item mapping lives in the repository root file <code>owasp-mapping.md</code>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h1>Hands-on labs</h1>
+  <p class="lead">
+    Each lab runs locally with a <strong>simulated agent</strong> (no cloud LLM). Tool calls use the same
+    Python handlers as the optional FastMCP stdio server.
+  </p>
+  <div class="controls">
+    <label>Persona</label>
+    <select id="persona">
+      <option value="alice" {% if user == 'alice' %}selected{% endif %}>Alice (user id 1)</option>
+      <option value="bob" {% if user == 'bob' %}selected{% endif %}>Bob (user id 2)</option>
+    </select>
+    <label class="chk"><input type="checkbox" id="instructor" {% if instructor %}checked{% endif %} /> Instructor hints</label>
+    <button type="button" id="save-session">Apply</button>
+  </div>
+  <ul class="lab-grid">
+    {% for lab in labs %}
+    <li>
+      <a href="/labs/{{ lab.id }}">
+        <span class="lab-id">Lab {{ lab.id }}</span>
+        <span class="lab-title">{{ lab.title }}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+<p class="page-bottom-refs note">
+  Official references:
+  <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> ·
+  <a href="https://owasp.org/www-project-mcp-top-10/">OWASP MCP Top 10</a> ·
+  <a href="https://genai.owasp.org/resource/owasp-top-10-for-llm-applications-2025">OWASP LLM Top 10 (2025)</a>
+</p>
+<script>
+  document.getElementById('save-session').addEventListener('click', async () => {
+    const u = document.getElementById('persona').value;
+    const ins = document.getElementById('instructor').checked;
+    await fetch('/api/session/user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user: u }),
+    });
+    await fetch('/api/session/instructor', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ on: ins }),
+    });
+    location.reload();
+  });
+</script>
+{% endblock %}
