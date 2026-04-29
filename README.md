@@ -120,6 +120,8 @@ Issues and PRs should keep the **separation** between `vulnerable-app/` (attacks
 
 - [OWASP Top 10 for LLM Applications 2025](https://genai.owasp.org/resource/owasp-top-10-for-llm-applications-2025)
 - [OWASP MCP Top 10](https://owasp.org/www-project-mcp-top-10/)
+- [MCP Security Best Practices — Microsoft (*mcp-for-beginners*)](https://github.com/microsoft/mcp-for-beginners/blob/main/02-Security/mcp-best-practices.md)
+- [MCP specification — Security best practices](https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices)
 
 ---
 

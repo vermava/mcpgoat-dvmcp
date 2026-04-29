@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
@@ -66,6 +66,63 @@ async def favicon():
     return FileResponse(_FAVICON_SVG, media_type="image/svg+xml")
 
 
+_OWP_MCP_HOME = "https://owasp.org/www-project-mcp-top-10/"
+_OWP_LLM_2025 = "https://genai.owasp.org/resource/owasp-top-10-for-llm-applications-2025"
+_MSFT_MCP_BP = "https://github.com/microsoft/mcp-for-beginners/blob/main/02-Security/mcp-best-practices.md"
+_MCP_SPEC_SEC = "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices"
+_MCP_SPEC_AUTHZ = "https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization"
+_MCP01 = "https://owasp.org/www-project-mcp-top-10/2025/MCP01-2025-Token-Mismanagement-and-Secret-Exposure"
+_MCP02 = "https://owasp.org/www-project-mcp-top-10/2025/MCP02-2025%E2%80%93Privilege-Escalation-via-Scope-Creep"
+_MCP03 = "https://owasp.org/www-project-mcp-top-10/2025/MCP03-2025%E2%80%93Tool-Poisoning"
+_MCP05 = "https://owasp.org/www-project-mcp-top-10/2025/MCP05-2025%E2%80%93Command-Injection%26Execution"
+_MCP06 = "https://owasp.org/www-project-mcp-top-10/2025/MCP06-2025%E2%80%93Intent-Flow-Subversion"
+_MCP07 = "https://owasp.org/www-project-mcp-top-10/2025/MCP07-2025%E2%80%93Insufficient-Authentication%26Authorization"
+_MCP08 = "https://owasp.org/www-project-mcp-top-10/2025/MCP08-2025%E2%80%93Lack-of-Audit-and-Telemetry"
+_MCP09 = "https://owasp.org/www-project-mcp-top-10/2025/MCP09-2025%E2%80%93Shadow-MCP-Servers"
+_MCP10 = "https://owasp.org/www-project-mcp-top-10/2025/MCP10-2025%E2%80%93ContextInjection%26OverSharing"
+
+
+def _lab_references(lab_id: int) -> list[dict[str, str]]:
+    """External reading links for the lab UI (shown below Proactive controls)."""
+    primary: dict[int, list[tuple[str, str]]] = {
+        1: [
+            ("MCP06:2025 — Intent Flow Subversion", _MCP06),
+            ("MCP10:2025 — Context Injection & Over-Sharing", _MCP10),
+        ],
+        2: [("MCP03:2025 — Tool Poisoning", _MCP03)],
+        3: [("MCP02:2025 — Privilege Escalation via Scope Creep", _MCP02)],
+        4: [("MCP01:2025 — Token Mismanagement & Secret Exposure", _MCP01)],
+        5: [("MCP07:2025 — Insufficient Authentication & Authorization", _MCP07)],
+        6: [("MCP10:2025 — Context Injection & Over-Sharing", _MCP10)],
+        7: [("MCP05:2025 — Command Injection & Execution", _MCP05)],
+        8: [
+            (
+                "MCP10:2025 — Context Injection & Over-Sharing (data path into presentation)",
+                _MCP10,
+            )
+        ],
+        9: [("MCP08:2025 — Lack of Audit and Telemetry", _MCP08)],
+        10: [
+            ("MCP09:2025 — Shadow MCP Servers", _MCP09),
+            ("MCP01:2025 — Token Mismanagement & Secret Exposure (secondary)", _MCP01),
+            ("MCP02:2025 — Privilege Escalation via Scope Creep (secondary)", _MCP02),
+        ],
+    }
+    out: list[dict[str, str]] = [{"label": a, "url": b} for a, b in primary[lab_id]]
+    out.append({"label": "OWASP MCP Top 10 — project home", "url": _OWP_MCP_HOME})
+    out.append({"label": "OWASP Top 10 for LLM Applications (2025)", "url": _OWP_LLM_2025})
+    out.append(
+        {
+            "label": "MCP Security Best Practices — Microsoft (mcp-for-beginners)",
+            "url": _MSFT_MCP_BP,
+        }
+    )
+    if lab_id == 5:
+        out.append({"label": "MCP specification — Authorization", "url": _MCP_SPEC_AUTHZ})
+    out.append({"label": "MCP specification — Security best practices", "url": _MCP_SPEC_SEC})
+    return out
+
+
 LABS_META: list[dict[str, Any]] = [
     {
         "id": 1,
@@ -89,6 +146,7 @@ LABS_META: list[dict[str, Any]] = [
             "Document which roles may invoke which tools and test those rules with adversarial prompts.",
             "Log policy decisions (who approved what) separately from model reasoning for auditability.",
         ],
+        "references": _lab_references(1),
     },
     {
         "id": 2,
@@ -111,6 +169,7 @@ LABS_META: list[dict[str, Any]] = [
             "Inventory tools per environment and alert on new or renamed tools at runtime.",
             "Pair tool descriptions with internal runbooks so humans spot semantic drift.",
         ],
+        "references": _lab_references(2),
     },
     {
         "id": 3,
@@ -133,6 +192,7 @@ LABS_META: list[dict[str, Any]] = [
             "Design tools as narrow APIs; reject “do everything” shortcuts during MCP design reviews.",
             "Threat-model each tool with the same rigor as a public REST endpoint.",
         ],
+        "references": _lab_references(3),
     },
     {
         "id": 4,
@@ -155,6 +215,7 @@ LABS_META: list[dict[str, Any]] = [
             "Secret scanning in CI/CD and in log pipelines; synthetic data only in lab and staging.",
             "Data-classification tags on tools so hosts can block or mask high-sensitivity results.",
         ],
+        "references": _lab_references(4),
     },
     {
         "id": 5,
@@ -177,6 +238,7 @@ LABS_META: list[dict[str, Any]] = [
             "Automated authz tests per tool, including negative cases for cross-user access.",
             "Central policy engine or sidecar that validates resource scope before execution.",
         ],
+        "references": _lab_references(5),
     },
     {
         "id": 6,
@@ -199,6 +261,7 @@ LABS_META: list[dict[str, Any]] = [
             "Content governance for indexed corpora; version and sign authoritative documents.",
             "Monitor for anomalous retrieval→tool patterns (e.g., sudden export after odd docs).",
         ],
+        "references": _lab_references(6),
     },
     {
         "id": 7,
@@ -221,6 +284,7 @@ LABS_META: list[dict[str, Any]] = [
             "Static analysis and fuzzing on tool argument paths; deny lists for metacharacters where shells exist.",
             "Capability-based design: return structured data and let a safe renderer build reports.",
         ],
+        "references": _lab_references(7),
     },
     {
         "id": 8,
@@ -243,6 +307,7 @@ LABS_META: list[dict[str, Any]] = [
             "Security review of every UI surface that displays agent or tool output.",
             "Automated tests with XSS payloads in tool fixtures.",
         ],
+        "references": _lab_references(8),
     },
     {
         "id": 9,
@@ -265,6 +330,7 @@ LABS_META: list[dict[str, Any]] = [
             "SLOs on log coverage for MCP routes; alarms when expected events are missing.",
             "Tabletop exercises that require trace replay from this telemetry.",
         ],
+        "references": _lab_references(9),
     },
     {
         "id": 10,
@@ -287,6 +353,7 @@ LABS_META: list[dict[str, Any]] = [
             "Config validation at startup; CI checks that fail if dangerous defaults are present in prod profiles.",
             "Inventory and attest every MCP server binary and tool list deployed to each tier.",
         ],
+        "references": _lab_references(10),
     },
 ]
 
@@ -328,7 +395,6 @@ async def home(request: Request):
         request,
         "index.html",
         {
-            "labs": LABS_META,
             "instructor": _instructor(request),
             "user": _session_user(request)[1],
             "username": _session_user(request)[1],
@@ -340,7 +406,17 @@ async def home(request: Request):
 
 @app.get("/labs", response_class=HTMLResponse)
 async def lab_index(request: Request):
-    return RedirectResponse("/", status_code=302)
+    return templates.TemplateResponse(
+        request,
+        "labs_list.html",
+        {
+            "labs": LABS_META,
+            "instructor": _instructor(request),
+            "user": _session_user(request)[1],
+            "username": _session_user(request)[1],
+            "debug_mode": settings.debug_mode,
+        },
+    )
 
 
 @app.get("/labs/{lab_id}", response_class=HTMLResponse)

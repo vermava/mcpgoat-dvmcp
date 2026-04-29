@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Lab index — MCP Security Lab{% endblock %}
 {% block content %}
+<div class="home-page">
 {% if show_readme_banner %}
 <figure class="home-readme-banner">
   <img
@@ -90,54 +91,14 @@
     </div>
   </div>
 </section>
-
-<section>
-  <h1>Hands-on labs</h1>
-  <p class="lead">
-    Each lab runs locally with a <strong>simulated agent</strong> (no cloud LLM). Tool calls use the same
-    Python handlers as the optional FastMCP stdio server.
-  </p>
-  <div class="controls">
-    <label>Persona</label>
-    <select id="persona">
-      <option value="alice" {% if user == 'alice' %}selected{% endif %}>Alice (user id 1)</option>
-      <option value="bob" {% if user == 'bob' %}selected{% endif %}>Bob (user id 2)</option>
-    </select>
-    <label class="chk"><input type="checkbox" id="instructor" {% if instructor %}checked{% endif %} /> Instructor hints</label>
-    <button type="button" id="save-session">Apply</button>
-  </div>
-  <ul class="lab-grid">
-    {% for lab in labs %}
-    <li>
-      <a href="/labs/{{ lab.id }}">
-        <span class="lab-id">Lab {{ lab.id }}</span>
-        <span class="lab-title">{{ lab.title }}</span>
-      </a>
-    </li>
-    {% endfor %}
-  </ul>
-</section>
+<p class="home-to-labs">
+  <a href="/labs">Open Hands-on Labs</a> — choose a persona, optional instructor hints, and an exercise.
+</p>
 <p class="page-bottom-refs note">
   Official references:
   <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> ·
   <a href="https://owasp.org/www-project-mcp-top-10/">OWASP MCP Top 10</a> ·
   <a href="https://genai.owasp.org/resource/owasp-top-10-for-llm-applications-2025">OWASP LLM Top 10 (2025)</a>
 </p>
-<script>
-  document.getElementById('save-session').addEventListener('click', async () => {
-    const u = document.getElementById('persona').value;
-    const ins = document.getElementById('instructor').checked;
-    await fetch('/api/session/user', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user: u }),
-    });
-    await fetch('/api/session/instructor', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ on: ins }),
-    });
-    location.reload();
-  });
-</script>
+</div>
 {% endblock %}

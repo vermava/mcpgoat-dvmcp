@@ -2,7 +2,7 @@
 {% block title %}{{ lab.title }} — Lab {{ lab.id }}{% endblock %}
 {% block content %}
 <article class="lab">
-  <p class="crumb"><a href="/">All labs</a> / Lab {{ lab.id }}</p>
+  <p class="crumb"><a href="/labs">All labs</a> / Lab {{ lab.id }}</p>
   <h1>Lab {{ lab.id }}: {{ lab.title }}</h1>
 
   <section class="panel lab-intro-panel" aria-labelledby="lab-about-heading">
@@ -69,7 +69,7 @@
 
   <section class="panel">
     <h2>Student notes</h2>
-    <p>Markdown deep-dive: <code>docs/labs/lab-{{ '%02d' % lab_id }}.md</code> (in this repo).</p>
+    <p>Markdown deep-dive: <code>docs/labs/lab-{{ '%02d' % lab_id }}.md</code> (in this repo). External reading links for this lab are in <strong>References</strong> below <em>Proactive controls</em>.</p>
   </section>
 
   <section class="panel lab-security-takeaways" aria-labelledby="takeaways-heading">
@@ -85,6 +85,14 @@
     <div class="lab-takeaway-block">
       <h3 class="lab-takeaway-title">Proactive controls</h3>
       <ul class="lab-takeaway-list">{% for line in lab.proactive_controls %}<li>{{ line }}</li>{% endfor %}</ul>
+    </div>
+    <div class="lab-takeaway-block">
+      <h3 class="lab-takeaway-title">References</h3>
+      <ul class="lab-takeaway-list lab-reference-list">
+        {% for ref in lab.references %}
+        <li><a href="{{ ref.url }}" target="_blank" rel="noopener noreferrer">{{ ref.label }}</a></li>
+        {% endfor %}
+      </ul>
     </div>
   </section>
 </article>

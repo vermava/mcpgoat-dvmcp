@@ -50,6 +50,50 @@ a {
   padding: 1.25rem;
 }
 
+.labs-list-section {
+  border: 1px solid #2a3440;
+  border-radius: 12px;
+  padding: 1.25rem 1.35rem 1.5rem;
+  background: linear-gradient(160deg, #141c28 0%, #121922 100%);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.labs-list-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+
+.labs-list-lead {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+}
+
+.labs-list-controls {
+  margin-top: 0.65rem;
+  margin-bottom: 0.65rem;
+}
+
+.labs-list-grid {
+  margin: 0;
+}
+
+.home-to-labs {
+  margin: 1.5rem 0 0;
+  padding: 1rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid #2a3440;
+  background: #121922;
+  font-size: 0.95rem;
+  color: #d7deea;
+}
+
+.home-to-labs a {
+  font-weight: 600;
+}
+
 .home-readme-banner {
   margin: 0 0 1.75rem;
   padding: 0;
@@ -247,6 +291,16 @@ a {
 
 .lab-takeaway-list li {
   margin: 0.4rem 0;
+}
+
+.lab-reference-list a {
+  color: #a5b4fc;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.lab-reference-list a:hover {
+  color: #c7d2fe;
 }
 
 .controls {
