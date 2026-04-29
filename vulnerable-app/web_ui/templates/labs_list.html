@@ -8,15 +8,6 @@
     Each lab runs locally with a <strong>simulated agent</strong> (no cloud LLM). Tool calls use the same
     Python handlers as the optional FastMCP stdio server.
   </p>
-  <div class="controls labs-list-controls">
-    <label>Persona</label>
-    <select id="persona">
-      <option value="alice" {% if user == 'alice' %}selected{% endif %}>Alice (user id 1)</option>
-      <option value="bob" {% if user == 'bob' %}selected{% endif %}>Bob (user id 2)</option>
-    </select>
-    <label class="chk"><input type="checkbox" id="instructor" {% if instructor %}checked{% endif %} /> Instructor hints</label>
-    <button type="button" id="save-session">Apply</button>
-  </div>
   <ul class="lab-grid labs-list-grid">
     {% for lab in labs %}
     <li>
@@ -27,6 +18,15 @@
     </li>
     {% endfor %}
   </ul>
+  <div class="controls labs-list-controls" aria-label="Lab session">
+    <label>Persona</label>
+    <select id="persona">
+      <option value="alice" {% if user == 'alice' %}selected{% endif %}>Alice (user id 1)</option>
+      <option value="bob" {% if user == 'bob' %}selected{% endif %}>Bob (user id 2)</option>
+    </select>
+    <label class="chk"><input type="checkbox" id="instructor" {% if instructor %}checked{% endif %} /> Instructor hints</label>
+    <button type="button" id="save-session">Apply</button>
+  </div>
 </section>
 </div>
 <script>
